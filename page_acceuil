@@ -1,0 +1,121 @@
+
+package javaapplication1;
+import javax.swing.*;
+import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+
+public class JavaApplication1 {
+    public static void main(String[] args) {
+        SwingUtilities.invokeLater(() -> {
+            JFrame frame = new JFrame("Barre de recherche - Style Booking");
+            frame.setExtendedState(JFrame.MAXIMIZED_BOTH); // ✅ Plein écran
+            frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+            frame.setLocationRelativeTo(null);
+
+            // Panel principal
+            JPanel mainPanel = new JPanel(new BorderLayout(10, 10));
+            mainPanel.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
+
+            // --- Top bar (Nom du site + Mon compte)
+            JPanel topBar = new JPanel(new BorderLayout());
+            JLabel siteName = new JLabel("Booking.com");
+            siteName.setFont(new Font("SansSerif", Font.BOLD, 25));
+
+            JButton monCompteBtn = new JButton("Mon compte");
+        monCompteBtn.setFocusPainted(false);
+        monCompteBtn.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                ouvrirPageMonCompte(frame); // Passer la frame pour remplacer le contenu
+            }
+        });
+
+            topBar.add(siteName, BorderLayout.WEST);
+            topBar.add(monCompteBtn, BorderLayout.EAST);
+            mainPanel.add(topBar, BorderLayout.NORTH);
+
+            // --- Centre : titre + barre de recherche
+            JPanel centerPanel = new JPanel();
+            centerPanel.setLayout(new BoxLayout(centerPanel, BoxLayout.Y_AXIS));
+
+            // Titre
+            JLabel titre = new JLabel("Trouver votre séjour");
+            titre.setFont(new Font("SansSerif", Font.BOLD, 24));
+            titre.setAlignmentX(Component.CENTER_ALIGNMENT);
+            titre.setBorder(BorderFactory.createEmptyBorder(20, 0, 20, 0));
+            centerPanel.add(titre);
+
+            // --- Barre de recherche sur toute la largeur
+            JPanel barreRecherche = new JPanel();
+            barreRecherche.setLayout(new BoxLayout(barreRecherche, BoxLayout.X_AXIS));
+            barreRecherche.setBorder(BorderFactory.createLineBorder(Color.ORANGE, 2, true));
+            barreRecherche.setBackground(Color.WHITE);
+            barreRecherche.setMaximumSize(new Dimension(Integer.MAX_VALUE, 60));
+            barreRecherche.setAlignmentX(Component.CENTER_ALIGNMENT);
+
+            // Champs
+            barreRecherche.add(createChamp("Où allez-vous ?"));
+            barreRecherche.add(createSeparator());
+
+            barreRecherche.add(createChamp("Date d'arrivée — Date de départ"));
+            barreRecherche.add(createSeparator());
+
+            barreRecherche.add(createChamp("2 adultes · 0 enfant · 1 chambre"));
+            barreRecherche.add(createSeparator());
+
+            // ✅ Panel pour bouton "Rechercher"
+            JPanel panelRechercher = new JPanel(new BorderLayout());
+            panelRechercher.setBackground(new Color(0, 102, 255));
+            panelRechercher.setMaximumSize(new Dimension(200, 100));
+            panelRechercher.setPreferredSize(new Dimension(200, 100));
+            panelRechercher.setBorder(BorderFactory.createEmptyBorder(5, 10, 5, 10));
+
+            JButton rechercherBtn = new JButton("Rechercher");
+            rechercherBtn.setContentAreaFilled(false);
+            rechercherBtn.setBorderPainted(false);
+            rechercherBtn.setFocusPainted(false);
+            rechercherBtn.setForeground(Color.WHITE);
+            rechercherBtn.setFont(new Font("SansSerif", Font.BOLD, 14));
+
+            panelRechercher.add(rechercherBtn, BorderLayout.CENTER);
+            barreRecherche.add(panelRechercher);
+
+            centerPanel.add(barreRecherche);
+            mainPanel.add(centerPanel, BorderLayout.CENTER);
+
+            // Affichage
+            frame.setContentPane(mainPanel);
+            frame.setVisible(true);
+        });
+    }
+
+    // --- Nouvelle fenêtre "Mon compte"
+    private static void ouvrirPageMonCompte(JFrame frame) {
+    // Remplacer le contenu de la fenêtre principale par la page "Mon compte"
+    JPanel monComptePanel = new JPanel(new BorderLayout());
+    JLabel message = new JLabel("Bienvenue dans votre espace compte !");
+    message.setFont(new Font("SansSerif", Font.PLAIN, 16));
+    message.setHorizontalAlignment(SwingConstants.CENTER);
+    
+    monComptePanel.add(message, BorderLayout.CENTER);
+    frame.setContentPane(monComptePanel); // Remplacer le contenu de la fenêtre
+    frame.revalidate(); // Mettre à jour la fenêtre pour afficher la nouvelle vue
+    frame.repaint(); // Rafraîchir l'affichage
+}
+
+    // --- Méthodes utilitaires
+    private static JTextField createChamp(String placeholder) {
+        JTextField champ = new JTextField(placeholder);
+        champ.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
+        return champ;
+    }
+
+    private static JComponent createSeparator() {
+        JPanel sep = new JPanel();
+        sep.setPreferredSize(new Dimension(2, 40));
+        sep.setMaximumSize(new Dimension(2, Integer.MAX_VALUE));
+        sep.setBackground(Color.ORANGE);
+        return sep;
+    }
+}
