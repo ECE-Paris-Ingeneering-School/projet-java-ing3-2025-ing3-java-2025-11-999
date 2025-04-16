@@ -1,0 +1,36 @@
+package Vue;
+
+import javax.swing.*;
+import java.awt.*;
+import Controleur.ControleurClient;
+
+public class FenetreBase extends JFrame {
+    private CardLayout cardLayout;
+    private JPanel cards;
+    private ControleurClient controleur;
+
+    public static final String CONNEXION = "connexion";
+    public static final String INSCRIPTION = "inscription";
+
+    public FenetreBase(ControleurClient controleur) {
+        super("Application Booking");
+        this.controleur = controleur;
+
+        cardLayout = new CardLayout();
+        cards = new JPanel(cardLayout);
+
+        // Ajouter les vues comme des "cartes"
+        cards.add(new VueConnexion(controleur), CONNEXION);
+        cards.add(new VueInscription(controleur), INSCRIPTION);
+
+        this.setContentPane(cards);
+        this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        this.setExtendedState(JFrame.MAXIMIZED_BOTH); // Plein écran
+        this.setResizable(false);
+        this.setVisible(true);
+    }
+
+    public void montrerVue(String nomVue) {
+        cardLayout.show(cards, nomVue);
+    }
+}
