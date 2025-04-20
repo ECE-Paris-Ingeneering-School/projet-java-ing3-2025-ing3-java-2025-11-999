@@ -1,0 +1,99 @@
+package Vue;
+
+import Controleur.ControleurClient;
+import Modele.Client;  // Assure-toi d'importer la classe Client
+import java.util.Optional;  // Importer Optional
+
+import javax.swing.*;
+import java.awt.*;
+
+public class VueConnexion extends JPanel {
+    private final ControleurClient controleur;
+
+    public VueConnexion(ControleurClient controleur) {
+        this.controleur = controleur;
+
+        setLayout(new GridBagLayout());
+        setBackground(new Color(130, 235, 100));
+
+        GridBagConstraints gbc = new GridBagConstraints();
+        gbc.insets = new Insets(10, 20, 10, 20);
+        gbc.fill = GridBagConstraints.NONE;
+
+        JLabel labelTitre = new JLabel("Connexion");
+        labelTitre.setFont(new Font("SansSerif", Font.BOLD, 28));
+        gbc.gridx = 0;
+        gbc.gridy = 0;
+        gbc.gridwidth = 2;
+        add(labelTitre, gbc);
+
+        // Champs
+        JTextField champEmail = new JTextField(20);
+        JPasswordField champMotDePasse = new JPasswordField(20);
+
+        gbc.gridwidth = 1;
+        gbc.anchor = GridBagConstraints.LINE_END;
+
+        // Labels
+        addLabel("Email :", gbc, 1);
+        addLabel("Mot de passe :", gbc, 2);
+
+        gbc.anchor = GridBagConstraints.LINE_START;
+        gbc.gridx = 1;
+        addField(champEmail, gbc, 1);
+        addField(champMotDePasse, gbc, 2);
+
+        // Bouton connexion
+        JButton boutonConnexion = new JButton("Se connecter");
+        boutonConnexion.setPreferredSize(new Dimension(150, 35));
+        gbc.gridx = 0;
+        gbc.gridy = 3;
+        gbc.gridwidth = 2;
+        gbc.anchor = GridBagConstraints.CENTER;
+        add(boutonConnexion, gbc);
+
+        // Bouton pour aller à la page d'inscription
+        JButton boutonInscription = new JButton("→ Inscription");
+        boutonInscription.setPreferredSize(new Dimension(150, 35));
+        gbc.gridy = 4;
+        add(boutonInscription, gbc);
+
+        // Action bouton Connexion
+        boutonConnexion.addActionListener(e -> {
+            String email = champEmail.getText();
+            String motDePasse = new String(champMotDePasse.getPassword());
+
+            if (email.isEmpty() || motDePasse.isEmpty()) {
+                JOptionPane.showMessageDialog(this, "Tous les champs doivent être remplis.", "Erreur", JOptionPane.ERROR_MESSAGE);
+                return;
+            }
+
+            // Vérification des informations de connexion avec la méthode connexion
+            Optional<Client> clientOptional = controleur.connexion(email, motDePasse);
+            if (clientOptional.isPresent()) {
+                Client client = clientOptional.get();
+                JOptionPane.showMessageDialog(this, "Connexion réussie !", "Succès", JOptionPane.INFORMATION_MESSAGE);
+                // Rediriger vers la page principale ou autre
+                controleur.allerAccueil();
+            } else {
+                JOptionPane.showMessageDialog(this, "Email ou mot de passe incorrect.", "Erreur", JOptionPane.ERROR_MESSAGE);
+            }
+        });
+
+        // Action bouton Inscription
+        boutonInscription.addActionListener(e -> {
+            controleur.allerInscription();  // Redirection vers la page d'inscription
+        });
+    }
+
+    private void addLabel(String text, GridBagConstraints gbc, int y) {
+        gbc.gridx = 0;
+        gbc.gridy = y;
+        add(new JLabel(text), gbc);
+    }
+
+    private void addField(JComponent field, GridBagConstraints gbc, int y) {
+        gbc.gridy = y;
+        add(field, gbc);
+    }
+}
