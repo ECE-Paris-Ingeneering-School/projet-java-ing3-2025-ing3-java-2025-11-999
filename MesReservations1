@@ -1,0 +1,116 @@
+package javaapplication1;
+
+import javax.swing.*;
+import java.awt.*;
+
+public class JavaApplication1 extends JFrame {
+
+    public JavaApplication1() {
+        setTitle("Mes Réservations");
+        setExtendedState(JFrame.MAXIMIZED_BOTH);
+        setDefaultCloseOperation(DISPOSE_ON_CLOSE);
+        getContentPane().setBackground(Color.WHITE);
+        setLayout(new BorderLayout());
+
+        add(buildTopBar(), BorderLayout.NORTH);
+        add(buildReservationsPanel(), BorderLayout.CENTER);
+
+        setVisible(true);
+    }
+
+    private JPanel buildTopBar() {
+        JPanel topBar = new JPanel(new BorderLayout());
+        topBar.setBackground(Color.WHITE);
+        topBar.setBorder(BorderFactory.createEmptyBorder(10, 20, 10, 20));
+
+        JLabel title = new JLabel("Mes Réservations");
+        title.setFont(new Font("SansSerif", Font.BOLD, 24));
+        topBar.add(title, BorderLayout.WEST);
+
+        JButton btnRetour = new JButton("Retour à l'accueil");
+        btnRetour.setFocusPainted(false);
+        btnRetour.setBackground(new Color(220, 220, 220));
+        btnRetour.setFont(new Font("SansSerif", Font.PLAIN, 14));
+        btnRetour.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
+
+        topBar.add(btnRetour, BorderLayout.EAST);
+        return topBar;
+    }
+
+    private JScrollPane buildReservationsPanel() {
+        JPanel container = new JPanel();
+        container.setLayout(new BoxLayout(container, BoxLayout.Y_AXIS));
+        container.setBackground(Color.WHITE);
+        container.setBorder(BorderFactory.createEmptyBorder(20, 40, 20, 40));
+
+        container.add(createReservationPanel());
+
+        JScrollPane scrollPane = new JScrollPane(container);
+        scrollPane.setBorder(null);
+        return scrollPane;
+    }
+
+    private JPanel createReservationPanel() {
+    JPanel panel = new JPanel();
+    panel.setLayout(new BorderLayout(20, 0));
+    panel.setBackground(new Color(245, 245, 245));
+    panel.setBorder(BorderFactory.createEmptyBorder(20, 20, 20, 20));
+    panel.setMaximumSize(new Dimension(Integer.MAX_VALUE, 250));
+
+    // Partie image à gauche
+    JLabel imageLabel = new JLabel();
+    ImageIcon originalImage = new ImageIcon(getClass().getResource("/javaapplication1/hotel_du_Lac_1.png"));
+    
+    // Redimensionner l'image pour l'adapter à la taille du label (200x200)
+    Image img = originalImage.getImage(); // Obtenir l'image
+    Image resizedImg = img.getScaledInstance(200, 200, Image.SCALE_SMOOTH); // Redimensionner l'image
+    imageLabel.setIcon(new ImageIcon(resizedImg)); // Appliquer l'image redimensionnée
+    
+    // Centrer l'image dans le JLabel
+    imageLabel.setHorizontalAlignment(JLabel.CENTER);
+    imageLabel.setVerticalAlignment(JLabel.CENTER);
+    imageLabel.setPreferredSize(new Dimension(200, 200));
+    panel.add(imageLabel, BorderLayout.WEST);
+
+    // Partie info au centre
+    JPanel info = new JPanel();
+    info.setLayout(new BoxLayout(info, BoxLayout.Y_AXIS));
+    info.setOpaque(false);
+
+    info.add(new JLabel("Nom : Hôtel du Lac"));
+    info.add(new JLabel("Catégorie : Hôtel"));
+    info.add(new JLabel("Adresse : 12 Rue des Roses"));
+    info.add(new JLabel("Ville : Paris"));
+    info.add(new JLabel("Pays : France"));
+    info.add(new JLabel("Prix par nuit : 120.00 €"));
+    info.add(new JLabel("Prix total : 720.00 €"));
+    info.add(new JLabel("Description : Un hôtel avec vue sur le lac."));
+    info.add(new JLabel("Nombre d'étoiles : 4"));
+    info.add(new JLabel("Nombre d'adultes : 2"));
+    info.add(new JLabel("Nombre d'enfants : 0"));
+    info.add(new JLabel("Nombre de chambres : 1"));
+
+    panel.add(info, BorderLayout.CENTER);
+
+    // Partie résumé à droite
+    JPanel resume = new JPanel();
+    resume.setLayout(new BoxLayout(resume, BoxLayout.Y_AXIS));
+    resume.setOpaque(false);
+    resume.setPreferredSize(new Dimension(250, 200));
+
+    resume.add(new JLabel("Date de début : 01/05/2025"));
+    resume.add(new JLabel("Date de fin : 07/05/2025"));
+    resume.add(new JLabel("Méthode de paiement : Carte bancaire"));
+    resume.add(new JLabel("Date de paiement : 15/04/2025"));
+
+    panel.add(resume, BorderLayout.EAST);
+
+    panel.setAlignmentX(Component.CENTER_ALIGNMENT);
+
+    return panel;
+}
+
+    public static void main(String[] args) {
+        SwingUtilities.invokeLater(JavaApplication1::new);
+    }
+}
