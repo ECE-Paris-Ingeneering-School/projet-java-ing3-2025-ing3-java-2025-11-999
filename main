@@ -1,0 +1,23 @@
+package Controleur;
+
+import Dao.DaoFactory;
+
+import Vue.FenetreBase;
+
+public class Main {
+    public static void main(String[] args) {
+        // Étape 1: Connexion à la base de données
+        //Crée une instance de DaoFactory
+        DaoFactory daoFactory = DaoFactory.getInstance("booking", "root", "");
+
+        // Étape 2: Création du contrôleur
+        ControleurClient controleur = new ControleurClient(daoFactory);
+
+        // Étape 3: Lancer la VueConnexion (ou VueInscription, selon l'état de l'application)
+        // Ici, nous commençons avec la VueConnexion
+        //new VueConnexion(controleur);
+
+        FenetreBase fenetre = new FenetreBase(controleur, daoFactory);
+        controleur.setFenetreBase(fenetre);
+    }
+}
