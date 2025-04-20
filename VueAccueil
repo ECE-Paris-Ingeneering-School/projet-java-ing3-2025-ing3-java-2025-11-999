@@ -1,0 +1,125 @@
+package Vue;
+
+import Dao.DaoFactory;
+import Modele.Hebergement;
+import Dao.HebergementDAO;
+import Dao.HebergementDAOImpl;
+import Dao.ImageDAO;
+import Dao.ImageDAOImpl;
+
+import javax.swing.*;
+import java.awt.*;
+import java.util.List;
+
+public class VueAccueil extends JPanel {
+
+    private JPanel panelHeader, panelRecherche, panelCentre;
+    private JButton boutonCompte, boutonRechercher;
+    private JTextField champLieu, champDates, champPersonnes;
+    private JPanel panelFiltres, panelHebergements;
+
+    public VueAccueil(DaoFactory daoFactory) {
+        setLayout(new BorderLayout());
+        setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
+
+        // ==== HEADER ====
+        panelHeader = new JPanel(new BorderLayout());
+        JLabel titre = new JLabel("Trouver l'hébergement qui vous convient");
+        titre.setFont(new Font("SansSerif", Font.BOLD, 24));
+        panelHeader.add(titre, BorderLayout.WEST);
+
+        boutonCompte = new JButton("Mon compte");
+        panelHeader.add(boutonCompte, BorderLayout.EAST);
+
+        add(panelHeader, BorderLayout.NORTH);
+
+        // ==== PANEL CENTRAL (Recherche + Contenu) ====
+        panelCentre = new JPanel();
+        panelCentre.setLayout(new BorderLayout(10, 10));
+
+        // ==== BARRE DE RECHERCHE ====
+        panelRecherche = new JPanel();
+        panelRecherche.setLayout(new BoxLayout(panelRecherche, BoxLayout.X_AXIS));
+        panelRecherche.setBorder(BorderFactory.createEmptyBorder(5, 0, 5, 0));
+
+        champLieu = new JTextField("Lieu");
+        champDates = new JTextField("Dates");
+        champPersonnes = new JTextField("Personnes");
+        boutonRechercher = new JButton("Rechercher");
+
+        Dimension champDimension = new Dimension(150, 30);
+        champLieu.setPreferredSize(champDimension);
+        champDates.setPreferredSize(champDimension);
+        champPersonnes.setPreferredSize(champDimension);
+        boutonRechercher.setPreferredSize(new Dimension(120, 30));
+
+        panelRecherche.add(champLieu);
+        panelRecherche.add(Box.createRigidArea(new Dimension(10, 0)));
+        panelRecherche.add(champDates);
+        panelRecherche.add(Box.createRigidArea(new Dimension(10, 0)));
+        panelRecherche.add(champPersonnes);
+        panelRecherche.add(Box.createRigidArea(new Dimension(10, 0)));
+        panelRecherche.add(boutonRechercher);
+
+        panelCentre.add(panelRecherche, BorderLayout.NORTH);
+
+        // ==== CONTENU (Filtres + Hébergements) ====
+        JPanel panelContenu = new JPanel(new BorderLayout(10, 0));
+
+        // Filtres
+        panelFiltres = new JPanel();
+        panelFiltres.setLayout(new BoxLayout(panelFiltres, BoxLayout.Y_AXIS));
+        panelFiltres.setBorder(BorderFactory.createTitledBorder("Filtres"));
+        panelFiltres.add(new JCheckBox("Piscine"));
+        panelFiltres.add(new JCheckBox("Wifi"));
+        panelFiltres.add(new JCheckBox("Parking"));
+        panelFiltres.add(new JCheckBox("Climatisation"));
+        panelFiltres.add(new JCheckBox("Animaux autorisés"));
+
+        // Hébergements dynamiques
+        panelHebergements = new JPanel();
+        panelHebergements.setLayout(new BoxLayout(panelHebergements, BoxLayout.Y_AXIS));
+        panelHebergements.setBorder(BorderFactory.createTitledBorder("Résultats"));
+
+        HebergementDAO hebergementDAO = new HebergementDAOImpl(daoFactory);
+        List<Hebergement> hebergements = hebergementDAO.findAll();
+
+        ImageDAO imageDAO = new ImageDAOImpl(daoFactory);
+
+        for (Hebergement h : hebergements) {
+
+            String imageUrl = imageDAO.findImage(h.getId_hebergement());
+            ImageIcon image = null;
+
+            if (imageUrl != null) {
+                image = new ImageIcon("src/Image/" + imageUrl);
+                Image img = image.getImage().getScaledInstance(120, 90, Image.SCALE_SMOOTH);
+                image = new ImageIcon(img);
+            }
+
+            PanelHebergement cellule = new PanelHebergement(
+                    h.getNom(),
+                    h.getCategorie(),
+                    h.getVille(),
+                    h.getPays(),
+                    h.getNombre_adultes(),
+                    h.getNombre_enfants(),
+                    h.getNombre_chambres(),
+                    h.getPrix_par_nuit(),
+                    image
+            );
+            cellule.setBorder(BorderFactory.createEmptyBorder(5, 5, 5, 5));
+            panelHebergements.add(cellule);
+        }
+
+        JScrollPane scrollPane = new JScrollPane(panelHebergements);
+        scrollPane.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_ALWAYS);
+
+        panelContenu.add(panelFiltres, BorderLayout.WEST);
+        panelContenu.add(scrollPane, BorderLayout.CENTER);
+
+        panelCentre.add(panelContenu, BorderLayout.CENTER);
+
+        add(panelCentre, BorderLayout.CENTER);
+    }
+}
