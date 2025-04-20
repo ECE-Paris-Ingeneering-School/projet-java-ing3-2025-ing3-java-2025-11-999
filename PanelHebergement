@@ -1,0 +1,65 @@
+package Vue;
+
+import javax.swing.*;
+import java.awt.*;
+import java.sql.Blob;
+
+public class PanelHebergement extends JPanel {
+    public PanelHebergement(String nom, String categorie, String ville, String pays, int nbAdultes,
+                            int nbEnfants, int nbChambres, double prix, ImageIcon image) {
+
+        setLayout(new BorderLayout(10, 0));
+        setBorder(BorderFactory.createLineBorder(Color.LIGHT_GRAY, 1));
+        setBackground(Color.WHITE);
+        setMaximumSize(new Dimension(Integer.MAX_VALUE, 130));
+        setPreferredSize(new Dimension(600, 130));
+
+        // ==== IMAGE ====
+        JLabel labelImage = new JLabel();
+        if (image != null) {
+            labelImage.setIcon(image);
+        }
+        else{
+            System.out.println("Image non trouvée pour l'hébergement ID : ");
+        }
+        labelImage.setPreferredSize(new Dimension(130, 130));
+        add(labelImage, BorderLayout.WEST);
+
+        // ==== INFOS PRINCIPALES ====
+        JPanel panelInfos = new JPanel();
+        panelInfos.setLayout(new BoxLayout(panelInfos, BoxLayout.Y_AXIS));
+        panelInfos.setOpaque(false);
+
+        JLabel labelNom = new JLabel(nom + " (" + categorie + "★)");
+        labelNom.setFont(new Font("SansSerif", Font.BOLD, 16));
+        JLabel labelVillePays = new JLabel(ville + ", " + pays);
+        JLabel labelCapacite = new JLabel(nbAdultes + " adultes, " + nbEnfants + " enfants, " + nbChambres + " chambre(s)");
+
+        panelInfos.add(labelNom);
+        panelInfos.add(Box.createVerticalStrut(5));
+        panelInfos.add(labelVillePays);
+        panelInfos.add(Box.createVerticalStrut(5));
+        panelInfos.add(labelCapacite);
+
+        add(panelInfos, BorderLayout.CENTER);
+
+        // ==== PRIX & BOUTON ====
+        JPanel panelAction = new JPanel();
+        panelAction.setLayout(new BoxLayout(panelAction, BoxLayout.Y_AXIS));
+        panelAction.setOpaque(false);
+        panelAction.setPreferredSize(new Dimension(120, 130));
+
+        JLabel labelPrix = new JLabel(prix + " € / nuit");
+        labelPrix.setFont(new Font("SansSerif", Font.BOLD, 14));
+        labelPrix.setForeground(new Color(0, 102, 204));
+        JButton boutonVoir = new JButton("Voir");
+
+        panelAction.add(Box.createVerticalGlue());
+        panelAction.add(labelPrix);
+        panelAction.add(Box.createVerticalStrut(10));
+        panelAction.add(boutonVoir);
+        panelAction.add(Box.createVerticalGlue());
+
+        add(panelAction, BorderLayout.EAST);
+    }
+}
