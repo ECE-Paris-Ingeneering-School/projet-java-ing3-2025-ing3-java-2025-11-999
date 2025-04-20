@@ -1,0 +1,165 @@
+package javaapplication1;
+
+import javax.swing.*;
+import java.awt.*;
+import java.awt.event.FocusAdapter;
+import java.awt.event.FocusEvent;
+
+public class JavaApplication1 extends JFrame {
+
+    private final JTextField txtMontant = new JTextField(10);
+    private final JTextField txtCardHolder = new PreRemplissage("Entrez votre Nom");
+    private final JTextField txtCardNumber = new PreRemplissage("0000 0000 0000 0000");
+    private final JTextField txtCVV = new PreRemplissage("123");
+    private final JTextField txtExpiry = new PreRemplissage("MM/AA");
+    private final JTextField txtCodePromo = new JTextField(12);
+    private final JButton btnPayer = new JButton(" Payer");
+    private final JComboBox<String> comboPaymentMethod = new JComboBox<>(new String[]{"PayPal", "Mastercard", "Visa"});
+
+    public JavaApplication1() {
+        setTitle("Paiement");
+        setExtendedState(JFrame.MAXIMIZED_BOTH); // Plein écran
+        setDefaultCloseOperation(DISPOSE_ON_CLOSE);
+        getContentPane().setBackground(Color.WHITE);
+        setLayout(new BorderLayout());
+
+        // Barre du haut avec bouton "Retour à l'accueil"
+        add(buildTopBar(), BorderLayout.NORTH);
+
+        // Partie centrale centrée
+        JPanel mainContainer = new JPanel();
+        mainContainer.setLayout(new GridBagLayout());
+        mainContainer.setBackground(Color.WHITE);
+
+        JPanel centre = new JPanel();
+        centre.setLayout(new BoxLayout(centre, BoxLayout.Y_AXIS));
+        centre.setBackground(Color.WHITE);
+        centre.setMaximumSize(new Dimension(600, 500));
+
+        JLabel titre = new JLabel("Paiement");
+        titre.setFont(new Font("SansSerif", Font.BOLD, 36));
+        titre.setAlignmentX(Component.CENTER_ALIGNMENT);
+        titre.setForeground(new Color(20, 20, 20));
+
+        centre.add(titre);
+        centre.add(Box.createVerticalStrut(40));
+        centre.add(buildFormPanel());
+        centre.add(Box.createVerticalStrut(40));
+        centre.add(buildBottomLine());
+
+        mainContainer.add(centre);
+        add(mainContainer, BorderLayout.CENTER);
+        setVisible(true);
+    }
+
+    private JPanel buildTopBar() {
+        JPanel topBar = new JPanel(new BorderLayout());
+        topBar.setBackground(Color.WHITE);
+        topBar.setBorder(BorderFactory.createEmptyBorder(10, 20, 10, 20));
+
+        JButton btnRetour = new JButton("Retour à l'accueil");
+        btnRetour.setFocusPainted(false);
+        btnRetour.setBackground(new Color(220, 220, 220));
+        btnRetour.setFont(new Font("SansSerif", Font.PLAIN, 14));
+        btnRetour.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
+
+        // Action possible ici :
+        // btnRetour.addActionListener(e -> {
+        //     System.out.println("Retour à l'accueil");
+        // });
+
+        topBar.add(btnRetour, BorderLayout.EAST);
+        return topBar;
+    }
+
+    private JPanel buildFormPanel() {
+        JPanel panel = new JPanel(new GridBagLayout());
+        panel.setBackground(Color.WHITE);
+        GridBagConstraints g = new GridBagConstraints();
+        g.insets = new Insets(15, 15, 15, 15);
+        g.anchor = GridBagConstraints.LINE_END;
+
+        comboPaymentMethod.setFont(new Font("SansSerif", Font.PLAIN, 14));
+        txtCardHolder.setFont(new Font("SansSerif", Font.PLAIN, 14));
+        txtCardNumber.setFont(new Font("SansSerif", Font.PLAIN, 14));
+        txtCVV.setFont(new Font("SansSerif", Font.PLAIN, 14));
+        txtExpiry.setFont(new Font("SansSerif", Font.PLAIN, 14));
+
+        int row = 0;
+        addRow(panel, g, row++, "Méthode de paiement :", comboPaymentMethod);
+        addRow(panel, g, row++, "Nom du titulaire :", txtCardHolder);
+        addRow(panel, g, row++, "Numéro de carte :", txtCardNumber);
+        addRow(panel, g, row++, "CVC :", txtCVV);
+        addRow(panel, g, row++, "Date expiration :", txtExpiry);
+
+        return panel;
+    }
+
+    private JPanel buildBottomLine() {
+        JPanel line = new JPanel(new FlowLayout(FlowLayout.CENTER, 20, 0));
+        line.setOpaque(false);
+        line.setBackground(Color.WHITE);
+        line.setBorder(BorderFactory.createEmptyBorder(10, 0, 0, 0));
+
+        txtCodePromo.setFont(new Font("SansSerif", Font.PLAIN, 14));
+        txtMontant.setFont(new Font("SansSerif", Font.BOLD, 16));
+        btnPayer.setFont(new Font("SansSerif", Font.BOLD, 16));
+        btnPayer.setBackground(new Color(0, 102, 204));
+        btnPayer.setForeground(Color.WHITE);
+        btnPayer.setFocusPainted(false);
+        btnPayer.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
+
+        line.add(new JLabel("Code promo :"));
+        line.add(txtCodePromo);
+        line.add(new JLabel("Montant :"));
+        line.add(txtMontant);
+        line.add(btnPayer);
+        return line;
+    }
+
+    private static void addRow(JPanel p, GridBagConstraints g, int row, String label, JComponent comp) {
+        g.gridx = 0;
+        g.gridy = row;
+        g.anchor = GridBagConstraints.LINE_END;
+
+        JLabel lbl = new JLabel(label);
+        lbl.setFont(new Font("SansSerif", Font.BOLD, 14));
+        p.add(lbl, g);
+
+        g.gridx = 1;
+        g.anchor = GridBagConstraints.LINE_START;
+        comp.setPreferredSize(new Dimension(200, 30));
+        p.add(comp, g);
+    }
+
+    public static void main(String[] args) {
+        SwingUtilities.invokeLater(JavaApplication1::new);
+    }
+
+    // Champ texte avec placeholder
+    static class PreRemplissage extends JTextField {
+        private final String placeholder;
+
+        public PreRemplissage(String placeholder) {
+            super(placeholder);
+            this.placeholder = placeholder;
+            setForeground(Color.GRAY);
+
+            this.addFocusListener(new FocusAdapter() {
+                public void focusGained(FocusEvent e) {
+                    if (getText().equals(placeholder)) {
+                        setText("");
+                        setForeground(Color.BLACK);
+                    }
+                }
+
+                public void focusLost(FocusEvent e) {
+                    if (getText().isEmpty()) {
+                        setText(placeholder);
+                        setForeground(Color.GRAY);
+                    }
+                }
+            });
+        }
+    }
+}
