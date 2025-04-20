@@ -1,0 +1,67 @@
+package Modele;
+
+public class Hebergement {
+    private int id_hebergement;
+    private String nom;
+    private String categorie;
+    private String adresse;
+    private String ville;
+    private String pays;
+    private double latitude;
+    private double longitude;
+    private double lat_centre;
+    private double long_centre;
+    private double prix_par_nuit;
+    private String description;
+    private int nombre_etoiles;
+    private int nombre_adultes;
+    private int nombre_enfants;
+    private int nombre_chambres;
+
+    public Hebergement(int id_hebergement, String nom, String categorie, String adresse, String ville, String pays,
+                       double latitude, double longitude, double lat_centre, double long_centre,
+                       double prix_par_nuit, String description, int nombre_etoiles, int nombre_adultes,
+                       int nombre_enfants, int nombre_chambres) {
+        this.id_hebergement = id_hebergement;
+        this.nom = nom;
+        this.categorie = categorie;
+        this.adresse = adresse;
+        this.ville = ville;
+        this.pays = pays;
+        this.latitude = latitude;
+        this.longitude = longitude;
+        this.lat_centre = lat_centre;
+        this.long_centre = long_centre;
+        this.prix_par_nuit = prix_par_nuit;
+        this.description = description;
+        this.nombre_etoiles = nombre_etoiles;
+        this.nombre_adultes = nombre_adultes;
+        this.nombre_enfants = nombre_enfants;
+        this.nombre_chambres = nombre_chambres;
+    }
+
+    // Getters et Setters
+    public int getId_hebergement() { return id_hebergement; }
+    public String getNom() { return nom; }
+    public String getCategorie() { return categorie; }
+    public String getAdresse() { return adresse; }
+    public String getVille() { return ville; }
+    public String getPays() { return pays; }
+    public double getLatitude() { return latitude; }
+    public double getLongitude() { return longitude; }
+    public double getLat_centre() { return lat_centre; }
+    public double getLong_centre() { return long_centre; }
+    public double getPrix_par_nuit() { return prix_par_nuit; }
+    public String getDescription() { return description; }
+    public int getNombre_etoiles() { return nombre_etoiles; }
+    public int getNombre_adultes() { return nombre_adultes; }
+    public int getNombre_enfants() { return nombre_enfants; }
+    public int getNombre_chambres() { return nombre_chambres; }
+
+    // Pas de setters pour les valeurs fixes ? On peut les ajouter si besoin !
+
+    @Override
+    public String toString() {
+        return nom + " (" + categorie + ") - " + ville + ", " + pays;
+    }
+}
