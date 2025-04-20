@@ -1,0 +1,121 @@
+package Vue;
+
+import Controleur.ControleurClient;
+import Modele.Client;
+
+import javax.swing.*;
+import java.awt.*;
+import java.time.LocalDate;
+
+public class VueInscription extends JPanel {
+    private final ControleurClient controleur;
+
+    public VueInscription(ControleurClient controleur) {
+        this.controleur = controleur;
+
+        setLayout(new GridBagLayout());
+        setBackground(new Color(255, 150, 150));
+
+        GridBagConstraints gbc = new GridBagConstraints();
+        gbc.insets = new Insets(10, 20, 10, 20);
+        gbc.fill = GridBagConstraints.NONE;
+
+        JLabel labelTitre = new JLabel("Inscription");
+        labelTitre.setFont(new Font("SansSerif", Font.BOLD, 28));
+        gbc.gridx = 0;
+        gbc.gridy = 0;
+        gbc.gridwidth = 2;
+        add(labelTitre, gbc);
+
+        // Champs
+        JTextField champNom = createTextField();
+        JTextField champPrenom = createTextField();
+        JTextField champEmail = createTextField();
+        JPasswordField champMotDePasse = createPasswordField();
+
+        gbc.gridwidth = 1;
+        gbc.anchor = GridBagConstraints.LINE_END;
+
+        // Labels
+        addLabel("Nom :", gbc, 1);
+        addLabel("Prénom :", gbc, 2);
+        addLabel("Email :", gbc, 3);
+        addLabel("Mot de passe :", gbc, 4);
+
+        gbc.anchor = GridBagConstraints.LINE_START;
+        gbc.gridx = 1;
+        addField(champNom, gbc, 1);
+        addField(champPrenom, gbc, 2);
+        addField(champEmail, gbc, 3);
+        addField(champMotDePasse, gbc, 4);
+
+        // Bouton inscription
+        JButton boutonInscription = new JButton("S'inscrire");
+        boutonInscription.setPreferredSize(new Dimension(150, 35));
+        gbc.gridx = 0;
+        gbc.gridy = 5;
+        gbc.gridwidth = 2;
+        gbc.anchor = GridBagConstraints.CENTER;
+        add(boutonInscription, gbc);
+
+        // Bouton pour revenir à la page de connexion
+        JButton boutonRetourConnexion = new JButton("← Retour à la connexion");
+        boutonRetourConnexion.setPreferredSize(new Dimension(200, 35));
+        gbc.gridy = 6;
+        add(boutonRetourConnexion, gbc);
+
+        boutonRetourConnexion.addActionListener(e -> controleur.allerConnexion());
+
+        // Action bouton
+        boutonInscription.addActionListener(e -> {
+            String nom = champNom.getText();
+            String prenom = champPrenom.getText();
+            String email = champEmail.getText();
+            String motDePasse = new String(champMotDePasse.getPassword());
+
+            if (nom.isEmpty() || prenom.isEmpty() || email.isEmpty() || motDePasse.isEmpty()) {
+                JOptionPane.showMessageDialog(this, "Tous les champs doivent être remplis.", "Erreur", JOptionPane.ERROR_MESSAGE);
+                return;
+            }
+
+            // Vérification si l'email existe déjà dans la base de données
+            if (controleur.emailExiste(email)) {
+                JOptionPane.showMessageDialog(this, "Cet email est déjà utilisé.", "Erreur", JOptionPane.ERROR_MESSAGE);
+                return;
+            }
+
+            Client client = new Client(nom, prenom, email, motDePasse, LocalDate.now(), "nouveau");
+
+            boolean success = controleur.inscription(client);
+            if (success) {
+                JOptionPane.showMessageDialog(this, "Inscription réussie !", "Succès", JOptionPane.INFORMATION_MESSAGE);
+                controleur.allerAccueil();
+            } else {
+                JOptionPane.showMessageDialog(this, "Erreur lors de l'inscription.", "Erreur", JOptionPane.ERROR_MESSAGE);
+            }
+        });
+    }
+
+    private void addLabel(String text, GridBagConstraints gbc, int y) {
+        gbc.gridx = 0;
+        gbc.gridy = y;
+        add(new JLabel(text), gbc);
+    }
+
+    private void addField(JComponent field, GridBagConstraints gbc, int y) {
+        gbc.gridy = y;
+        add(field, gbc);
+    }
+
+    private JTextField createTextField() {
+        JTextField tf = new JTextField(20);
+        tf.setPreferredSize(new Dimension(200, 30));
+        return tf;
+    }
+
+    private JPasswordField createPasswordField() {
+        JPasswordField pf = new JPasswordField(20);
+        pf.setPreferredSize(new Dimension(200, 30));
+        return pf;
+    }
+}
