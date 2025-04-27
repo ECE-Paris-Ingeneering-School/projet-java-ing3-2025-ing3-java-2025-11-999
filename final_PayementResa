@@ -33,18 +33,13 @@ public class PayementResa extends JFrame {
         centre.setLayout(new BoxLayout(centre, BoxLayout.Y_AXIS));
         centre.setBackground(Color.WHITE);
         centre.setMaximumSize(new Dimension(600, 500));
-        
-        centre.add(PanelPayement());
-        
-       
+        centre.add(PanelPayement());  
         mainContainer.add(centre);
         add(mainContainer, BorderLayout.CENTER);
 
-        // Action sur le bouton Payer
         btnPayer.addActionListener(e -> {
             if (validerChamps()) {
                 JOptionPane.showMessageDialog(this, "Paiement effectué avec succès ! \n Vous recevrez votre reservations par mail ou allez dans Acceuil -> Mes réservations", "Payement validé", JOptionPane.INFORMATION_MESSAGE);
-                // Tu peux ici ajouter une action après paiement (ex: fermer la fenêtre)
             }
         });
 
@@ -78,16 +73,12 @@ public class PayementResa extends JFrame {
     }
 
     private JPanel PanelPayement() {
-    // Panel principal avec BoxLayout vertical
+
     JPanel panel = new JPanel();
     panel.setLayout(new BoxLayout(panel, BoxLayout.Y_AXIS));
     panel.setBackground(Color.WHITE);
-    panel.setBorder(BorderFactory.createCompoundBorder(
-            BorderFactory.createLineBorder(new Color(200, 200, 200)), // Bordure grise
-            BorderFactory.createEmptyBorder(30, 50, 30, 50) // Marges internes
-    ));
-
-    // *** Titre ***
+    panel.setBorder(BorderFactory.createCompoundBorder(BorderFactory.createLineBorder(new Color(200, 200, 200)), BorderFactory.createEmptyBorder(30, 50, 30, 50)));
+    
     JLabel titre = new JLabel("Paiement");
     titre.setFont(new Font("SansSerif", Font.BOLD, 36));
     titre.setAlignmentX(Component.CENTER_ALIGNMENT);
@@ -95,8 +86,6 @@ public class PayementResa extends JFrame {
     panel.add(titre);
 
     panel.add(Box.createVerticalStrut(40)); // Espace après le titre
-
-    // *** Formulaire ***
     JPanel formPanel = new JPanel(new GridBagLayout());
     formPanel.setBackground(Color.WHITE);
     GridBagConstraints g = new GridBagConstraints();
@@ -108,8 +97,8 @@ public class PayementResa extends JFrame {
     txtCardNumber.setFont(new Font("SansSerif", Font.PLAIN, 14));
     txtCVV.setFont(new Font("SansSerif", Font.PLAIN, 14));
     txtExpiry.setFont(new Font("SansSerif", Font.PLAIN, 14));
-
     int row = 0;
+
     addRow(formPanel, g, row++, "Méthode de paiement :", comboPaymentMethod);
     addRow(formPanel, g, row++, "Nom du titulaire :", txtCardHolder);
     addRow(formPanel, g, row++, "Numéro de carte :", txtCardNumber);
@@ -117,17 +106,10 @@ public class PayementResa extends JFrame {
     addRow(formPanel, g, row++, "Date expiration :", txtExpiry);
 
     panel.add(formPanel);
-
-    panel.add(Box.createVerticalStrut(20)); // Espace avant la ligne paiement
-
-    // *** Ligne avec Code promo, Montant et Bouton ***
+    panel.add(Box.createVerticalStrut(20));
     panel.add(LignePayement());
-
     return panel;
 }
-
-
-
 
     private JPanel LignePayement() {
         JPanel line = new JPanel(new FlowLayout(FlowLayout.CENTER, 20, 0));
@@ -165,37 +147,27 @@ public class PayementResa extends JFrame {
         comp.setPreferredSize(new Dimension(200, 30));
         p.add(comp, g);
     }
-
-    // Validation des champ
     private boolean validerChamps() {
-    // Vérifier Nom du titulaire
     String nom = txtCardHolder.getText().trim();
     if (nom.isEmpty() || nom.equals("Entrez votre Nom") || !nom.matches("[a-zA-ZÀ-ÿ\\s'-]+")) {
         JOptionPane.showMessageDialog(this, "Veuillez entrer un nom valide.", "Erreur", JOptionPane.ERROR_MESSAGE);
         return false;
     }
-
-    // Vérifier Numéro de carte
     String numeroCarte = txtCardNumber.getText().replaceAll("\\s+", "");
     if (numeroCarte.isEmpty() || txtCardNumber.getText().equals("0000 0000 0000 0000") || !numeroCarte.matches("\\d{16}")) {
         JOptionPane.showMessageDialog(this, "Veuillez entrer un numéro de carte valide (16 chiffres).", "Erreur", JOptionPane.ERROR_MESSAGE);
         return false;
     }
-
-    // Vérifier CVV
     String cvv = txtCVV.getText().trim();
     if (cvv.isEmpty() || cvv.equals("123") || !cvv.matches("\\d{3}")) {
         JOptionPane.showMessageDialog(this, "Veuillez entrer un CVC valide (3 chiffres).", "Erreur", JOptionPane.ERROR_MESSAGE);
         return false;
     }
-
-    // Vérifier Date d'expiration
     String expiration = txtExpiry.getText().trim();
     if (expiration.isEmpty() || expiration.equals("MM/AA") || !expiration.matches("(0[1-9]|1[0-2])/\\d{2}")) {
         JOptionPane.showMessageDialog(this, "Veuillez entrer une date d'expiration valide (MM/AA).", "Erreur", JOptionPane.ERROR_MESSAGE);
         return false;
     }
-
     return true;
 }
 
@@ -214,7 +186,6 @@ public class PayementResa extends JFrame {
                         setForeground(Color.BLACK);
                     }
                 }
-
                 public void focusLost(FocusEvent e) {
                     if (getText().isEmpty()) {
                         setText(placeholder);
