@@ -18,7 +18,7 @@ public class PayementResa extends JFrame {
 
     public PayementResa() {
         setTitle("Paiement");
-        setExtendedState(JFrame.MAXIMIZED_BOTH); // Plein écran
+        setExtendedState(JFrame.MAXIMIZED_BOTH);
         setDefaultCloseOperation(DISPOSE_ON_CLOSE);
         getContentPane().setBackground(new Color(245, 245, 245));
         setLayout(new BorderLayout());
