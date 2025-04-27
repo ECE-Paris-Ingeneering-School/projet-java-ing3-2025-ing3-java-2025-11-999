@@ -1,0 +1,144 @@
+package javaapplication1;
+
+import javax.swing.*;
+import java.awt.*;
+
+public class MesReservations extends JFrame {
+
+    public MesReservations() {
+        setTitle("Mes Réservations");
+        setExtendedState(JFrame.MAXIMIZED_BOTH);
+        setDefaultCloseOperation(DISPOSE_ON_CLOSE);
+        getContentPane().setBackground(new Color(245, 245, 245));
+        setLayout(new BorderLayout());
+
+        add(Booking(), BorderLayout.NORTH);
+        add(PanelResa(), BorderLayout.CENTER);
+
+        setVisible(true);
+    }
+
+    private JPanel Booking() {
+        JPanel topBar = new JPanel(new BorderLayout());
+        topBar.setBackground(new Color(0,0, 255)); 
+        topBar.setBorder(BorderFactory.createEmptyBorder(15, 30, 15, 30));
+
+        JLabel title = new JLabel("Booking.com");
+        title.setFont(new Font("SansSerif", Font.BOLD, 25));
+        title.setForeground(Color.WHITE);
+        topBar.add(title, BorderLayout.WEST);
+        
+        JButton btnRetour = new JButton("Retour à l'accueil");
+        btnRetour.setFocusPainted(false);
+        btnRetour.setBackground(new Color(255,255,255));
+        btnRetour.setForeground(Color.BLUE);
+        btnRetour.setFont(new Font("SansSerif", Font.BOLD, 16));
+        btnRetour.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
+        btnRetour.setPreferredSize(new Dimension(180, 40));
+        btnRetour.addActionListener(e -> {
+            dispose();
+            new Acceuil(); // VIGGO METS ICI LE NOM DE TA CLASSE POUR REVENIR A L ACCEUIL
+        });
+
+        topBar.add(btnRetour, BorderLayout.EAST);
+        return topBar;
+    }
+
+    private JScrollPane PanelResa() {
+        JPanel container = new JPanel();
+        container.setLayout(new BoxLayout(container, BoxLayout.Y_AXIS));
+        container.setBackground(new Color(245, 245, 245));
+        
+        JLabel titreResa = new JLabel("Mes Réservations");
+        titreResa.setFont(new Font("SansSerif", Font.BOLD, 28));
+        titreResa.setForeground(new Color(30, 30, 30));
+        titreResa.setAlignmentX(Component.CENTER_ALIGNMENT); // <-- C'est ça qui centre dans BoxLayout
+        titreResa.setBorder(BorderFactory.createEmptyBorder(10, 0, 30, 0)); // Espacement
+        container.add(titreResa);
+        
+        container.setBorder(BorderFactory.createEmptyBorder(20, 60, 20, 60));
+
+        container.add(createPanelResa(
+            "Hôtel du Lac", "Hôtel", "12 Rue des Roses", "Paris", "France", 120.00,
+            "Un hôtel avec vue sur le lac.", 4, 2, 0, 1, "hotel_du_Lac_1.png",
+            "01/05/2025", "07/05/2025", "720.00", "Mastercard", "15/09/2024"
+        ));
+
+        container.add(Box.createVerticalStrut(20)); // espace entre les cartes
+
+        container.add(createPanelResa(
+            "Villa Paradis", "Villa", "56 Chemin du Soleil", "Nice", "France", 200.00,
+            "Superbe villa avec piscine.", 5, 2, 0, 1, "Villa_Paradis_1.png",
+            "05/05/2025", "10/05/2025", "1000.00", "Paypal", "28/01/2025"
+        ));
+
+        JScrollPane scrollPane = new JScrollPane(container);
+        scrollPane.setBorder(null);
+        scrollPane.setBackground(new Color(245, 245, 245));
+        return scrollPane;
+    }
+
+    private JPanel createPanelResa(String nom, String categorie, String adresse, String ville, String pays, double prixParNuit,
+                                           String description, int etoiles, int adultes, int enfants, int chambres, String imageFileName,
+                                           String dateDebut, String dateFin, String prixTotal, String methodePaiement, String datePaiement) {
+        JPanel panel = new JPanel(new BorderLayout(20, 0)) {
+            @Override
+            protected void paintComponent(Graphics g) {
+                super.paintComponent(g);
+                Graphics2D g2 = (Graphics2D) g;
+                g2.setColor(Color.LIGHT_GRAY);
+                g2.drawRoundRect(0, 0, getWidth()-1, getHeight()-1, 20, 20);
+            }
+        };
+        panel.setBackground(Color.WHITE);
+        panel.setBorder(BorderFactory.createEmptyBorder(20, 20, 20, 20));
+        panel.setMaximumSize(new Dimension(Integer.MAX_VALUE, 350));
+
+        JLabel imageLabel = new JLabel();
+        ImageIcon originalImage = new ImageIcon(getClass().getResource("/javaapplication1/" + imageFileName));
+        Image img = originalImage.getImage().getScaledInstance(200, 200, Image.SCALE_SMOOTH);
+        imageLabel.setIcon(new ImageIcon(img));
+        imageLabel.setPreferredSize(new Dimension(200, 200));
+        panel.add(imageLabel, BorderLayout.WEST);
+
+        JPanel infoResa = new JPanel();
+        infoResa.setLayout(new BoxLayout(infoResa, BoxLayout.Y_AXIS));
+        infoResa.setOpaque(false);
+        infoResa.add(makeLabel("Nom : " + nom, true));
+        infoResa.add(makeLabel("Catégorie : " + categorie, false));
+        infoResa.add(makeLabel("Adresse : " + adresse, false));
+        infoResa.add(makeLabel("Ville : " + ville, false));
+        infoResa.add(makeLabel("Pays : " + pays, false));
+        infoResa.add(makeLabel("Prix par nuit : " + prixParNuit + " €", false));
+        infoResa.add(makeLabel("Prix total : " + prixTotal + " €", false));
+        infoResa.add(makeLabel("Description : " + description, false));
+        infoResa.add(makeLabel("Nombre d'étoiles : " + etoiles, false));
+        infoResa.add(makeLabel("Nombre d'adultes : " + adultes, false));
+        infoResa.add(makeLabel("Nombre d'enfants : " + enfants, false));
+        infoResa.add(makeLabel("Nombre de chambres : " + chambres, false));
+        panel.add(infoResa, BorderLayout.CENTER);
+
+        JPanel infoPayement = new JPanel();
+        infoPayement.setLayout(new BoxLayout(infoPayement, BoxLayout.Y_AXIS));
+        infoPayement.setOpaque(false);
+        infoPayement.setPreferredSize(new Dimension(200, 200));
+        infoPayement.add(makeLabel("Début : " + dateDebut, false));
+        infoPayement.add(makeLabel("Fin : " + dateFin, false));
+        infoPayement.add(makeLabel("Paiement : " + methodePaiement, false));
+        infoPayement.add(makeLabel("Payé le : " + datePaiement, false));
+        panel.add(infoPayement, BorderLayout.EAST);
+
+        return panel;
+    }
+
+    private JLabel makeLabel(String text, boolean isTitle) {
+        JLabel label = new JLabel(text);
+        if (isTitle) {
+            label.setFont(new Font("SansSerif", Font.BOLD, 16));
+        } else {
+            label.setFont(new Font("SansSerif", Font.PLAIN, 14));
+        }
+        label.setBorder(BorderFactory.createEmptyBorder(3, 0, 3, 0));
+        return label;
+    }
+}
